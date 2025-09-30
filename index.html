@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Countdown to October 12, 2025 (Europe/Madrid)</title>
+  <meta name="description" content="Live countdown timer to October 12, 2025 in the Europe/Madrid time zone." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b1020;
+      --card: #121832;
+      --accent: #7aa2ff;
+      --muted: #9aa3b2;
+      --text: #e8edf7;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      background: radial-gradient(1200px 800px at 20% 10%, #19234a 0%, transparent 50%),
+                  radial-gradient(1000px 600px at 80% 80%, #0f1736 0%, transparent 50%),
+                  var(--bg);
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .wrap {
+      width: min(100%, 980px);
+      text-align: center;
+    }
+    header {
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 800;
+      margin: 0 0 8px 0;
+      letter-spacing: -0.02em;
+    }
+    .sub {
+      color: var(--muted);
+      font-size: clamp(14px, 1.6vw, 16px);
+    }
+    .timer {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: 16px;
+      margin: 24px 0 16px;
+    }
+    .unit {
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 20px 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      backdrop-filter: blur(6px);
+    }
+    .num {
+      font-variant-numeric: tabular-nums;
+      font-size: clamp(36px, 8vw, 64px);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: 0.02em;
+    }
+    .label {
+      margin-top: 6px;
+      font-size: 14px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+    .note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    footer {
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .done {
+      font-size: clamp(24px, 4vw, 32px);
+      font-weight: 700;
+      color: var(--accent);
+      margin: 16px 0 0;
+    }
+    @media (max-width: 640px) {
+      .timer { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Countdown to October 12, 2025</h1>
+      <div class="sub">Time zone: <strong>Europe/Madrid</strong></div>
+    </header>
+
+    <section id="countdown" aria-live="polite">
+      <div class="timer" role="group" aria-label="Time remaining">
+        <div class="unit"><div class="num" id="days">–</div><div class="label">Days</div></div>
+        <div class="unit"><div class="num" id="hours">–</div><div class="label">Hours</div></div>
+        <div class="unit"><div class="num" id="minutes">–</div><div class="label">Minutes</div></div>
+        <div class="unit"><div class="num" id="seconds">–</div><div class="label">Seconds</div></div>
+      </div>
+      <p class="note" id="note"></p>
+      <p class="done" id="done" hidden>It's October 12 in Madrid 🎉</p>
+    </section>
+
+    <footer>
+      Built with vanilla HTML/CSS/JS. No dependencies. Accurate across DST for Europe/Madrid.
+    </footer>
+  </div>
+
+  <script>
+    // --- Helpers to handle time zones without external libs ---
+    function getTimeZoneOffsetMs(date, timeZone) {
+      // Returns the offset in milliseconds applied to UTC to get the given time zone's wall time at 'date'.
+      const dtf = new Intl.DateTimeFormat('en-US', {
+        timeZone,
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+        hour12: false
+      });
+      const parts = dtf.formatToParts(date);
+      const map = Object.fromEntries(parts.map(p => [p.type, p.value]));
+      const asUTC = Date.UTC(
+        parseInt(map.year, 10),
+        parseInt(map.month, 10) - 1,
+        parseInt(map.day, 10),
+        parseInt(map.hour, 10),
+        parseInt(map.minute, 10),
+        parseInt(map.second, 10)
+      );
+      return asUTC - date.getTime();
+    }
+
+    function zonedTimeToUtc(year, month, day, hour, minute, second, timeZone) {
+      // Create a UTC Date representing the wall time in the given zone
+      const guess = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
+      const offset = getTimeZoneOffsetMs(guess, timeZone);
+      return new Date(guess.getTime() - offset);
+    }
+
+    // Target: 2025-10-12T00:00:00 in Europe/Madrid
+    const TARGET_TZ = 'Europe/Madrid';
+    const now = new Date();
+    const targetUTC = zonedTimeToUtc(now.getFullYear(), 10, 12, 0, 0, 0, TARGET_TZ);
+
+    const $d = document.getElementById('days');
+    const $h = document.getElementById('hours');
+    const $m = document.getElementById('minutes');
+    const $s = document.getElementById('seconds');
+    const $note = document.getElementById('note');
+    const $done = document.getElementById('done');
+
+    function format(n) { return String(Math.max(0, n)).padStart(2, '0'); }
+
+    function update() {
+      const nowUTC = Date.now();
+      let diff = targetUTC.getTime() - nowUTC;
+
+      if (diff <= 0) {
+        // If it's already Oct 12 00:00:00 in Madrid
+        document.getElementById('countdown').setAttribute('aria-label', 'Countdown complete');
+        $d.textContent = '00';
+        $h.textContent = '00';
+        $m.textContent = '00';
+        $s.textContent = '00';
+        $note.textContent = '';
+        $done.hidden = false;
+        return;
+      }
+
+      const seconds = Math.floor(diff / 1000) % 60;
+      const minutes = Math.floor(diff / (1000 * 60)) % 60;
+      const hours   = Math.floor(diff / (1000 * 60 * 60)) % 24;
+      const days    = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+      $d.textContent = String(days).padStart(2, '0');
+      $h.textContent = format(hours);
+      $m.textContent = format(minutes);
+      $s.textContent = format(seconds);
+
+      // Friendly note showing the target instant in the user's local time
+      const targetLocal = new Date(targetUTC);
+      $note.textContent = `Reaches 00:00 on Oct 12 in Madrid (your local: ${targetLocal.toLocaleString([], { dateStyle: 'medium', timeStyle: 'medium' })}).`;
+    }
+
+    update();
+    const timer = setInterval(update, 1000);
+
+    // Stop updates when the page is hidden to save CPU
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) { clearInterval(timer); }
+      else { update(); setInterval(update, 1000); }
+    });
+  </script>
+</body>
+</html>
