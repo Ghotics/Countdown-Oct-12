@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Countdown to October 12, 2025 (Europe/Madrid)</title>
-  <meta name="description" content="Live countdown timer to October 12, 2025 in the Europe/Madrid time zone." />
+  <title>Countdown to October 12, 2025 at 15:00 (Europe/Bucharest)</title>
+  <meta name="description" content="Live countdown timer to October 12, 2025 at 15:00 in the Europe/Bucharest time zone." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -98,8 +98,8 @@
 <body>
   <div class="wrap">
     <header>
-      <h1>Countdown to October 12, 2025</h1>
-      <div class="sub">Time zone: <strong>Europe/Madrid</strong></div>
+      <h1>Countdown to October 12, 2025 — 15:00 Romania time</h1>
+      <div class="sub">Time zone: <strong>Europe/Bucharest</strong></div>
     </header>
 
     <section id="countdown" aria-live="polite">
@@ -110,14 +110,13 @@
         <div class="unit"><div class="num" id="seconds">–</div><div class="label">Seconds</div></div>
       </div>
       <p class="note" id="note"></p>
-      <p class="done" id="done" hidden>It's October 12 in Madrid 🎉</p>
+      <p class="done" id="done" hidden>It's 15:00 on Oct 12 in Romania 🎉</p>
     </section>
   </div>
 
   <script>
     // --- Helpers to handle time zones without external libs ---
     function getTimeZoneOffsetMs(date, timeZone) {
-      // Returns the offset in milliseconds applied to UTC to get the given time zone's wall time at 'date'.
       const dtf = new Intl.DateTimeFormat('en-US', {
         timeZone,
         year: 'numeric', month: '2-digit', day: '2-digit',
@@ -138,16 +137,15 @@
     }
 
     function zonedTimeToUtc(year, month, day, hour, minute, second, timeZone) {
-      // Create a UTC Date representing the wall time in the given zone
       const guess = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
       const offset = getTimeZoneOffsetMs(guess, timeZone);
       return new Date(guess.getTime() - offset);
     }
 
-    // Target: 2025-10-12T00:00:00 in Europe/Madrid
-    const TARGET_TZ = 'Europe/Madrid';
+    // Target: 2025-10-12T15:00:00 in Europe/Bucharest
+    const TARGET_TZ = 'Europe/Bucharest';
     const now = new Date();
-    const targetUTC = zonedTimeToUtc(now.getFullYear(), 10, 12, 0, 0, 0, TARGET_TZ);
+    const targetUTC = zonedTimeToUtc(now.getFullYear(), 10, 12, 15, 0, 0, TARGET_TZ);
 
     const $d = document.getElementById('days');
     const $h = document.getElementById('hours');
@@ -163,7 +161,6 @@
       let diff = targetUTC.getTime() - nowUTC;
 
       if (diff <= 0) {
-        // If it's already Oct 12 00:00:00 in Madrid
         document.getElementById('countdown').setAttribute('aria-label', 'Countdown complete');
         $d.textContent = '00';
         $h.textContent = '00';
@@ -184,15 +181,13 @@
       $m.textContent = format(minutes);
       $s.textContent = format(seconds);
 
-      // Friendly note showing the target instant in the user's local time
       const targetLocal = new Date(targetUTC);
-      $note.textContent = `Reaches 00:00 on Oct 12 in Madrid (your local: ${targetLocal.toLocaleString([], { dateStyle: 'medium', timeStyle: 'medium' })}).`;
+      $note.textContent = `Reaches 15:00 on Oct 12 in Bucharest (your local: ${targetLocal.toLocaleString([], { dateStyle: 'medium', timeStyle: 'medium' })}).`;
     }
 
     update();
     const timer = setInterval(update, 1000);
 
-    // Stop updates when the page is hidden to save CPU
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) { clearInterval(timer); }
       else { update(); setInterval(update, 1000); }
