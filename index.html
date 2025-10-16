@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Countdown to October 12, 2025 at 15:00 (Europe/Bucharest)</title>
-  <meta name="description" content="Live countdown timer to October 12, 2025 at 15:00 in the Europe/Bucharest time zone." />
+  <title>Countdown — Nov 4, 2025 at 20:35 (Europe/Bucharest)</title>
+  <meta name="description" content="Live countdown timer to November 4, 2025 at 20:35 in the Europe/Bucharest time zone, with confetti celebration at zero." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -15,6 +15,7 @@
       --accent: #7aa2ff;
       --muted: #9aa3b2;
       --text: #e8edf7;
+      --success: #7cffc4;
     }
     * { box-sizing: border-box; }
     html, body { height: 100%; }
@@ -28,30 +29,18 @@
       display: grid;
       place-items: center;
       padding: 24px;
+      overflow-x: hidden;
     }
-    .wrap {
-      width: min(100%, 980px);
-      text-align: center;
-    }
-    header {
-      margin-bottom: 24px;
-    }
+    .wrap { width: min(100%, 980px); text-align: center; position: relative; z-index: 1; }
+    header { margin-bottom: 24px; }
     h1 {
       font-size: clamp(28px, 4vw, 44px);
       font-weight: 800;
       margin: 0 0 8px 0;
       letter-spacing: -0.02em;
     }
-    .sub {
-      color: var(--muted);
-      font-size: clamp(14px, 1.6vw, 16px);
-    }
-    .timer {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(120px, 1fr));
-      gap: 16px;
-      margin: 24px 0 16px;
-    }
+    .sub { color: var(--muted); font-size: clamp(14px, 1.6vw, 16px); }
+    .timer { display: grid; grid-template-columns: repeat(4, minmax(120px, 1fr)); gap: 16px; margin: 24px 0 16px; }
     .unit {
       background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
       border: 1px solid rgba(255,255,255,0.12);
@@ -59,46 +48,43 @@
       padding: 20px 12px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.25);
       backdrop-filter: blur(6px);
+      transform: translateZ(0);
     }
-    .num {
-      font-variant-numeric: tabular-nums;
-      font-size: clamp(36px, 8vw, 64px);
-      font-weight: 800;
-      line-height: 1;
-      letter-spacing: 0.02em;
+    .num { font-variant-numeric: tabular-nums; font-size: clamp(36px, 8vw, 64px); font-weight: 800; line-height: 1; letter-spacing: 0.02em; }
+    .label { margin-top: 6px; font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.18em; }
+    .note { margin-top: 14px; color: var(--muted); font-size: 13px; }
+    footer { margin-top: 18px; color: var(--muted); font-size: 12px; }
+    .done { font-size: clamp(24px, 4vw, 32px); font-weight: 800; color: var(--success); margin: 16px 0 0; opacity: 0; transform: scale(0.9); }
+
+    @keyframes popIn { to { opacity: 1; transform: scale(1); } }
+    @keyframes glow {
+      0% { text-shadow: 0 0 0 rgba(124,255,196,0); }
+      50% { text-shadow: 0 0 24px rgba(124,255,196,0.6); }
+      100% { text-shadow: 0 0 0 rgba(124,255,196,0); }
     }
-    .label {
-      margin-top: 6px;
-      font-size: 14px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
+
+    .celebrate { animation: popIn 400ms ease-out forwards, glow 1.8s ease-in-out 2; }
+
+    .tick { animation: tick 200ms ease-out; }
+    @keyframes tick { from { transform: translateY(-2px); } to { transform: translateY(0); } }
+
+    @media (max-width: 640px) { .timer { grid-template-columns: repeat(2, 1fr); } }
+
+    /* Fullscreen canvas for confetti */
+    canvas#confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+    .replay {
+      margin-top: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05);
+      color: var(--text); border-radius: 999px; padding: 8px 14px; cursor: pointer; font-weight: 600;
+      transition: transform .15s ease, background .2s ease;
     }
-    .note {
-      margin-top: 14px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-    footer {
-      margin-top: 18px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-    .done {
-      font-size: clamp(24px, 4vw, 32px);
-      font-weight: 700;
-      color: var(--accent);
-      margin: 16px 0 0;
-    }
-    @media (max-width: 640px) {
-      .timer { grid-template-columns: repeat(2, 1fr); }
-    }
+    .replay:hover { transform: translateY(-1px); background: rgba(255,255,255,0.08); }
   </style>
 </head>
 <body>
+  <canvas id="confetti"></canvas>
   <div class="wrap">
     <header>
-      <h1>Countdown to October 12, 2025 — 15:00 Romania time</h1>
+      <h1>Countdown to November 4, 2025 — 20:35 Romania time</h1>
       <div class="sub">Time zone: <strong>Europe/Bucharest</strong></div>
     </header>
 
@@ -110,12 +96,17 @@
         <div class="unit"><div class="num" id="seconds">–</div><div class="label">Seconds</div></div>
       </div>
       <p class="note" id="note"></p>
-      <p class="done" id="done" hidden>It's 15:00 on Oct 12 in Romania 🎉</p>
+      <p class="done" id="done" hidden>It's 20:35 on Nov 4 in Romania 🎉</p>
+      <button id="replay" class="replay" hidden>Replay celebration</button>
     </section>
+
+    <footer>
+      Built with vanilla HTML/CSS/JS. No dependencies. Accurate across DST for Europe/Bucharest.
+    </footer>
   </div>
 
   <script>
-    // --- Helpers to handle time zones without external libs ---
+    // ---- Time zone helpers (no external libs) ----
     function getTimeZoneOffsetMs(date, timeZone) {
       const dtf = new Intl.DateTimeFormat('en-US', {
         timeZone,
@@ -135,17 +126,16 @@
       );
       return asUTC - date.getTime();
     }
-
     function zonedTimeToUtc(year, month, day, hour, minute, second, timeZone) {
       const guess = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
       const offset = getTimeZoneOffsetMs(guess, timeZone);
       return new Date(guess.getTime() - offset);
     }
 
-    // Target: 2025-10-12T15:00:00 in Europe/Bucharest
+    // ---- Target: 2025-11-04T20:35:00 in Europe/Bucharest ----
     const TARGET_TZ = 'Europe/Bucharest';
     const now = new Date();
-    const targetUTC = zonedTimeToUtc(now.getFullYear(), 10, 12, 15, 0, 0, TARGET_TZ);
+    const targetUTC = zonedTimeToUtc(now.getFullYear(), 11, 4, 20, 35, 0, TARGET_TZ);
 
     const $d = document.getElementById('days');
     const $h = document.getElementById('hours');
@@ -153,21 +143,102 @@
     const $s = document.getElementById('seconds');
     const $note = document.getElementById('note');
     const $done = document.getElementById('done');
+    const $replay = document.getElementById('replay');
 
     function format(n) { return String(Math.max(0, n)).padStart(2, '0'); }
 
+    // ---- Confetti engine (lightweight) ----
+    const confettiCanvas = document.getElementById('confetti');
+    const ctx = confettiCanvas.getContext('2d');
+    let pixels = [];
+    let confettiRunning = false;
+    function resizeCanvas() {
+      confettiCanvas.width = window.innerWidth; confettiCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas, { passive: true });
+    resizeCanvas();
+
+    function spawnConfetti(count) {
+      const w = confettiCanvas.width, h = confettiCanvas.height;
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI - Math.PI/2;
+        pixels.push({
+          x: w/2 + (Math.random() - 0.5) * 200,
+          y: h/2,
+          vx: Math.cos(angle) * (2 + Math.random() * 6),
+          vy: - (4 + Math.random() * 10),
+          s: 4 + Math.random() * 6,
+          r: Math.random() * Math.PI,
+          vr: (Math.random() - 0.5) * 0.2,
+          shape: Math.random() < 0.5 ? 'rect' : 'circle',
+          alpha: 1,
+        });
+      }
+    }
+
+    function drawConfetti() {
+      ctx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
+      for (const p of pixels) {
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.r);
+        if (p.shape === 'rect') { ctx.fillRect(-p.s, -p.s/2, p.s*2, p.s); }
+        else { ctx.beginPath(); ctx.arc(0,0,p.s,0,Math.PI*2); ctx.fill(); }
+        ctx.restore();
+      }
+    }
+
+    function stepConfetti() {
+      const g = 0.15; const drag = 0.995; const fade = 0.0045;
+      for (const p of pixels) {
+        p.vx *= drag; p.vy = p.vy * drag + g; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.alpha -= fade;
+      }
+      pixels = pixels.filter(p => p.alpha > 0 && p.y < confettiCanvas.height + 40);
+    }
+
+    function rafLoop() {
+      if (!confettiRunning) return;
+      stepConfetti();
+      drawConfetti();
+      requestAnimationFrame(rafLoop);
+    }
+
+    function celebrate(durationMs = 6000) {
+      if (confettiRunning) return; // prevent overlap
+      confettiRunning = true;
+      // Seed a few bursts over the first 1.5s
+      const bursts = [0, 200, 400, 600, 900, 1200, 1500];
+      bursts.forEach((t, i) => setTimeout(() => spawnConfetti(80 - i * 8), t));
+      // Also sprinkle from the top
+      const sprinkle = setInterval(() => {
+        const w = confettiCanvas.width;
+        const x = Math.random() * w;
+        pixels.push({ x, y: -20, vx: (Math.random()-0.5)*1.5, vy: 2+Math.random()*2, s: 3+Math.random()*4, r: 0, vr: (Math.random()-0.5)*0.2, shape: Math.random()<0.5?'rect':'circle', alpha: 1 });
+      }, 60);
+
+      // Kick render loop
+      requestAnimationFrame(rafLoop);
+
+      // Stop after duration
+      setTimeout(() => { confettiRunning = false; clearInterval(sprinkle); }, durationMs);
+    }
+
+    // ---- Countdown logic ----
     function update() {
       const nowUTC = Date.now();
       let diff = targetUTC.getTime() - nowUTC;
 
       if (diff <= 0) {
         document.getElementById('countdown').setAttribute('aria-label', 'Countdown complete');
-        $d.textContent = '00';
-        $h.textContent = '00';
-        $m.textContent = '00';
-        $s.textContent = '00';
+        $d.textContent = '00'; $h.textContent = '00'; $m.textContent = '00'; $s.textContent = '00';
         $note.textContent = '';
-        $done.hidden = false;
+        if ($done.hidden) {
+          $done.hidden = false;
+          $done.classList.add('celebrate');
+          celebrate();
+          $replay.hidden = false;
+        }
         return;
       }
 
@@ -181,16 +252,23 @@
       $m.textContent = format(minutes);
       $s.textContent = format(seconds);
 
+      // Subtle tick animation on change
+      [$d,$h,$m,$s].forEach(el => { el.classList.remove('tick'); void el.offsetWidth; el.classList.add('tick'); });
+
       const targetLocal = new Date(targetUTC);
-      $note.textContent = `Reaches 15:00 on Oct 12 in Bucharest (your local: ${targetLocal.toLocaleString([], { dateStyle: 'medium', timeStyle: 'medium' })}).`;
+      $note.textContent = `Reaches 20:35 on Nov 4 in Bucharest (your local: ${targetLocal.toLocaleString([], { dateStyle: 'medium', timeStyle: 'medium' })}).`;
     }
 
     update();
-    const timer = setInterval(update, 1000);
+    let interval = setInterval(update, 1000);
 
+    // Replay button
+    $replay.addEventListener('click', () => { celebrate(); });
+
+    // Pause updates when hidden
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden) { clearInterval(timer); }
-      else { update(); setInterval(update, 1000); }
+      if (document.hidden) { clearInterval(interval); }
+      else { update(); interval = setInterval(update, 1000); }
     });
   </script>
 </body>
