@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Countdown — Nov 4, 2025 at 20:35 (Europe/Bucharest)</title>
-  <meta name="description" content="Live countdown timer to November 4, 2025 at 20:35 in the Europe/Bucharest time zone, with confetti celebration at zero." />
+  <title>Countdown — Nov 4, 2025 at 20:35 (Europe/Madrid)</title>
+  <meta name="description" content="Live countdown timer to November 4, 2025 at 20:35 in the Europe/Madrid time zone, with confetti celebration at zero." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -70,7 +70,6 @@
 
     @media (max-width: 640px) { .timer { grid-template-columns: repeat(2, 1fr); } }
 
-    /* Fullscreen canvas for confetti */
     canvas#confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
     .replay {
       margin-top: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05);
@@ -84,8 +83,8 @@
   <canvas id="confetti"></canvas>
   <div class="wrap">
     <header>
-      <h1>Countdown to November 4, 2025 — 20:35 Romania time</h1>
-      <div class="sub">Time zone: <strong>Europe/Bucharest</strong></div>
+      <h1>Countdown to November 4, 2025 — 20:35 Madrid time</h1>
+      <div class="sub">Time zone: <strong>Europe/Madrid</strong></div>
     </header>
 
     <section id="countdown" aria-live="polite">
@@ -96,17 +95,16 @@
         <div class="unit"><div class="num" id="seconds">–</div><div class="label">Seconds</div></div>
       </div>
       <p class="note" id="note"></p>
-      <p class="done" id="done" hidden>It's 20:35 on Nov 4 in Romania 🎉</p>
+      <p class="done" id="done" hidden>It's 20:35 on Nov 4 in Madrid 🎉</p>
       <button id="replay" class="replay" hidden>Replay celebration</button>
     </section>
 
     <footer>
-      Built with vanilla HTML/CSS/JS. No dependencies. Accurate across DST for Europe/Bucharest.
+      Built with vanilla HTML/CSS/JS. No dependencies. Accurate across DST for Europe/Madrid.
     </footer>
   </div>
 
   <script>
-    // ---- Time zone helpers (no external libs) ----
     function getTimeZoneOffsetMs(date, timeZone) {
       const dtf = new Intl.DateTimeFormat('en-US', {
         timeZone,
@@ -132,8 +130,8 @@
       return new Date(guess.getTime() - offset);
     }
 
-    // ---- Target: 2025-11-04T20:35:00 in Europe/Bucharest ----
-    const TARGET_TZ = 'Europe/Bucharest';
+    // Target: 2025-11-04T20:35:00 in Europe/Madrid
+    const TARGET_TZ = 'Europe/Madrid';
     const now = new Date();
     const targetUTC = zonedTimeToUtc(now.getFullYear(), 11, 4, 20, 35, 0, TARGET_TZ);
 
@@ -147,16 +145,12 @@
 
     function format(n) { return String(Math.max(0, n)).padStart(2, '0'); }
 
-    // ---- Confetti engine (lightweight) ----
     const confettiCanvas = document.getElementById('confetti');
     const ctx = confettiCanvas.getContext('2d');
     let pixels = [];
     let confettiRunning = false;
-    function resizeCanvas() {
-      confettiCanvas.width = window.innerWidth; confettiCanvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeCanvas, { passive: true });
-    resizeCanvas();
+    function resizeCanvas() { confettiCanvas.width = window.innerWidth; confettiCanvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanvas, { passive: true }); resizeCanvas();
 
     function spawnConfetti(count) {
       const w = confettiCanvas.width, h = confettiCanvas.height;
@@ -179,10 +173,7 @@
     function drawConfetti() {
       ctx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
       for (const p of pixels) {
-        ctx.save();
-        ctx.globalAlpha = p.alpha;
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.r);
+        ctx.save(); ctx.globalAlpha = p.alpha; ctx.translate(p.x, p.y); ctx.rotate(p.r);
         if (p.shape === 'rect') { ctx.fillRect(-p.s, -p.s/2, p.s*2, p.s); }
         else { ctx.beginPath(); ctx.arc(0,0,p.s,0,Math.PI*2); ctx.fill(); }
         ctx.restore();
@@ -199,32 +190,23 @@
 
     function rafLoop() {
       if (!confettiRunning) return;
-      stepConfetti();
-      drawConfetti();
-      requestAnimationFrame(rafLoop);
+      stepConfetti(); drawConfetti(); requestAnimationFrame(rafLoop);
     }
 
     function celebrate(durationMs = 6000) {
-      if (confettiRunning) return; // prevent overlap
+      if (confettiRunning) return;
       confettiRunning = true;
-      // Seed a few bursts over the first 1.5s
       const bursts = [0, 200, 400, 600, 900, 1200, 1500];
       bursts.forEach((t, i) => setTimeout(() => spawnConfetti(80 - i * 8), t));
-      // Also sprinkle from the top
       const sprinkle = setInterval(() => {
         const w = confettiCanvas.width;
         const x = Math.random() * w;
         pixels.push({ x, y: -20, vx: (Math.random()-0.5)*1.5, vy: 2+Math.random()*2, s: 3+Math.random()*4, r: 0, vr: (Math.random()-0.5)*0.2, shape: Math.random()<0.5?'rect':'circle', alpha: 1 });
       }, 60);
-
-      // Kick render loop
       requestAnimationFrame(rafLoop);
-
-      // Stop after duration
       setTimeout(() => { confettiRunning = false; clearInterval(sprinkle); }, durationMs);
     }
 
-    // ---- Countdown logic ----
     function update() {
       const nowUTC = Date.now();
       let diff = targetUTC.getTime() - nowUTC;
@@ -234,10 +216,7 @@
         $d.textContent = '00'; $h.textContent = '00'; $m.textContent = '00'; $s.textContent = '00';
         $note.textContent = '';
         if ($done.hidden) {
-          $done.hidden = false;
-          $done.classList.add('celebrate');
-          celebrate();
-          $replay.hidden = false;
+          $done.hidden = false; $done.classList.add('celebrate'); celebrate(); $replay.hidden = false;
         }
         return;
       }
@@ -252,20 +231,17 @@
       $m.textContent = format(minutes);
       $s.textContent = format(seconds);
 
-      // Subtle tick animation on change
       [$d,$h,$m,$s].forEach(el => { el.classList.remove('tick'); void el.offsetWidth; el.classList.add('tick'); });
 
       const targetLocal = new Date(targetUTC);
-      $note.textContent = `Reaches 20:35 on Nov 4 in Bucharest (your local: ${targetLocal.toLocaleString([], { dateStyle: 'medium', timeStyle: 'medium' })}).`;
+      $note.textContent = `Reaches 20:35 on Nov 4 in Madrid (your local: ${targetLocal.toLocaleString([], { dateStyle: 'medium', timeStyle: 'medium' })}).`;
     }
 
     update();
     let interval = setInterval(update, 1000);
 
-    // Replay button
     $replay.addEventListener('click', () => { celebrate(); });
 
-    // Pause updates when hidden
     document.addEventListener('visibilitychange', () => {
       if (document.hidden) { clearInterval(interval); }
       else { update(); interval = setInterval(update, 1000); }
