@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Countdown — Nov 4, 2025 at 20:35 (Europe/Madrid)</title>
-  <meta name="description" content="Live countdown timer to November 4, 2025 at 20:35 in the Europe/Madrid time zone, with confetti celebration at zero." />
+  <title>Countdown — Dec 30, 2025 at 09:30 (Europe/Bucharest)</title>
+  <meta name="description" content="Live countdown timer to December 30, 2025 at 21:30 in the Europe/Bucharest time zone, with confetti celebration at zero." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -83,8 +83,8 @@
   <canvas id="confetti"></canvas>
   <div class="wrap">
     <header>
-      <h1>Countdown to November 4, 2025 — 20:35 Madrid time</h1>
-      <div class="sub">Time zone: <strong>Europe/Madrid</strong></div>
+      <h1>Countdown to December 30, 2025 — 09:30 Bucharest time</h1>
+      <div class="sub">Time zone: <strong>Europe/Bucharest</strong></div>
     </header>
 
     <section id="countdown" aria-live="polite">
@@ -95,12 +95,12 @@
         <div class="unit"><div class="num" id="seconds">–</div><div class="label">Seconds</div></div>
       </div>
       <p class="note" id="note"></p>
-      <p class="done" id="done" hidden>It's 20:35 on Nov 4 in Madrid 🎉</p>
+      <p class="done" id="done" hidden>It's 09:30 on Dec 30 in Bucharest 🎉</p>
       <button id="replay" class="replay" hidden>Replay celebration</button>
     </section>
 
     <footer>
-      Built with vanilla HTML/CSS/JS. No dependencies. Accurate across DST for Europe/Madrid.
+      Built with vanilla HTML/CSS/JS. No dependencies. Accurate across DST for Europe/Bucharest.
     </footer>
   </div>
 
@@ -130,10 +130,10 @@
       return new Date(guess.getTime() - offset);
     }
 
-    // Target: 2025-11-04T20:35:00 in Europe/Madrid
-    const TARGET_TZ = 'Europe/Madrid';
+    // Target: 2025-12-30T21:30:00 in Europe/Bucharest
+    const TARGET_TZ = 'Europe/Bucharest';
     const now = new Date();
-    const targetUTC = zonedTimeToUtc(now.getFullYear(), 11, 4, 20, 35, 0, TARGET_TZ);
+    const targetUTC = zonedTimeToUtc(now.getFullYear(), 12, 30, 9, 30, 0, TARGET_TZ);
 
     const $d = document.getElementById('days');
     const $h = document.getElementById('hours');
@@ -234,7 +234,7 @@
       [$d,$h,$m,$s].forEach(el => { el.classList.remove('tick'); void el.offsetWidth; el.classList.add('tick'); });
 
       const targetLocal = new Date(targetUTC);
-      $note.textContent = `Reaches 20:35 on Nov 4 in Madrid (your local: ${targetLocal.toLocaleString([], { dateStyle: 'medium', timeStyle: 'medium' })}).`;
+      $note.textContent = `Reaches 09:30 on Dec 30 in Bucharest (your local: ${targetLocal.toLocaleString([], { dateStyle: 'medium', timeStyle: 'medium' })}).`;
     }
 
     update();
