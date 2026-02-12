@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Countdown — Feb 4, 2026 at 16:00 (Europe/Madrid)</title>
-  <meta name="description" content="Live countdown timer to February 4, 2026 at 16:00 in the Europe/Madrid time zone, with confetti celebration at zero." />
+  <title>Countdown — March 5, 2026 at 12:00 (Europe/Madrid)</title>
+  <meta name="description" content="Live countdown timer to March 5, 2026 at 12:00 in the Europe/Madrid time zone, with confetti celebration at zero." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
@@ -21,227 +21,133 @@
     html, body { height: 100%; }
     body {
       margin: 0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
       color: var(--text);
-      background: radial-gradient(1200px 800px at 20% 10%, #19234a 0%, transparent 50%),
-                  radial-gradient(1000px 600px at 80% 80%, #0f1736 0%, transparent 50%),
-                  var(--bg);
+      background:
+        radial-gradient(1200px 800px at 20% 10%, #19234a 0%, transparent 50%),
+        radial-gradient(1000px 600px at 80% 80%, #0f1736 0%, transparent 50%),
+        var(--bg);
       display: grid;
       place-items: center;
       padding: 24px;
       overflow-x: hidden;
     }
     .wrap { width: min(100%, 980px); text-align: center; position: relative; z-index: 1; }
-    header { margin-bottom: 24px; }
-    h1 {
-      font-size: clamp(28px, 4vw, 44px);
-      font-weight: 800;
-      margin: 0 0 8px 0;
-      letter-spacing: -0.02em;
+    h1 { font-size: clamp(28px,4vw,44px); font-weight:800; margin:0 0 8px; }
+    .sub { color:var(--muted); }
+
+    .timer {
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:16px;
+      margin:24px 0;
     }
-    .sub { color: var(--muted); font-size: clamp(14px, 1.6vw, 16px); }
-    .timer { display: grid; grid-template-columns: repeat(4, minmax(120px, 1fr)); gap: 16px; margin: 24px 0 16px; }
     .unit {
-      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 20px;
-      padding: 20px 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-      backdrop-filter: blur(6px);
-      transform: translateZ(0);
+      background:rgba(255,255,255,0.05);
+      border-radius:20px;
+      padding:20px;
+      backdrop-filter:blur(6px);
     }
-    .num { font-variant-numeric: tabular-nums; font-size: clamp(36px, 8vw, 64px); font-weight: 800; line-height: 1; letter-spacing: 0.02em; }
-    .label { margin-top: 6px; font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.18em; }
-    .note { margin-top: 14px; color: var(--muted); font-size: 13px; }
-    footer { margin-top: 18px; color: var(--muted); font-size: 12px; }
-    .done { font-size: clamp(24px, 4vw, 32px); font-weight: 800; color: var(--success); margin: 16px 0 0; opacity: 0; transform: scale(0.9); }
+    .num { font-size:clamp(36px,8vw,64px); font-weight:800; }
+    .label { color:var(--muted); font-size:13px; letter-spacing:.15em; }
 
-    @keyframes popIn { to { opacity: 1; transform: scale(1); } }
+    .done { font-size:28px; font-weight:800; color:var(--success); opacity:0; transform:scale(.9); }
+    .celebrate { animation:pop .4s forwards, glow 1.8s 2; }
+
+    @keyframes pop { to{opacity:1; transform:scale(1);} }
     @keyframes glow {
-      0% { text-shadow: 0 0 0 rgba(124,255,196,0); }
-      50% { text-shadow: 0 0 24px rgba(124,255,196,0.6); }
-      100% { text-shadow: 0 0 0 rgba(124,255,196,0); }
+      0%{text-shadow:0 0 0 transparent;}
+      50%{text-shadow:0 0 25px #7cffc4;}
+      100%{text-shadow:0 0 0 transparent;}
     }
 
-    .celebrate { animation: popIn 400ms ease-out forwards, glow 1.8s ease-in-out 2; }
-
-    .tick { animation: tick 200ms ease-out; }
-    @keyframes tick { from { transform: translateY(-2px); } to { transform: translateY(0); } }
-
-    @media (max-width: 640px) { .timer { grid-template-columns: repeat(2, 1fr); } }
-
-    canvas#confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
-    .replay {
-      margin-top: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05);
-      color: var(--text); border-radius: 999px; padding: 8px 14px; cursor: pointer; font-weight: 600;
-      transition: transform .15s ease, background .2s ease;
-    }
-    .replay:hover { transform: translateY(-1px); background: rgba(255,255,255,0.08); }
+    canvas{position:fixed;inset:0;pointer-events:none}
   </style>
 </head>
 <body>
-  <canvas id="confetti"></canvas>
-  <div class="wrap">
-    <header>
-      <h1>Countdown to February 4, 2026 — 16:00 Madrid time</h1>
-      <div class="sub">Time zone: <strong>Europe/Madrid</strong></div>
-    </header>
 
-    <section id="countdown" aria-live="polite">
-      <div class="timer" role="group" aria-label="Time remaining">
-        <div class="unit"><div class="num" id="days">–</div><div class="label">Days</div></div>
-        <div class="unit"><div class="num" id="hours">–</div><div class="label">Hours</div></div>
-        <div class="unit"><div class="num" id="minutes">–</div><div class="label">Minutes</div></div>
-        <div class="unit"><div class="num" id="seconds">–</div><div class="label">Seconds</div></div>
-      </div>
-      <p class="note" id="note"></p>
-      <p class="done" id="done" hidden>It's 16:00 on Feb 4 in Madrid 🎉</p>
-      <button id="replay" class="replay" hidden>Replay celebration</button>
-    </section>
-  </div>
+<canvas id="confetti"></canvas>
 
-  <script>
-    function getTimeZoneOffsetMs(date, timeZone) {
-      const dtf = new Intl.DateTimeFormat('en-US', {
-        timeZone,
-        year: 'numeric', month: '2-digit', day: '2-digit',
-        hour: '2-digit', minute: '2-digit', second: '2-digit',
-        hour12: false
-      });
-      const parts = dtf.formatToParts(date);
-      const map = Object.fromEntries(parts.map(p => [p.type, p.value]));
-      const asUTC = Date.UTC(
-        parseInt(map.year, 10),
-        parseInt(map.month, 10) - 1,
-        parseInt(map.day, 10),
-        parseInt(map.hour, 10),
-        parseInt(map.minute, 10),
-        parseInt(map.second, 10)
-      );
-      return asUTC - date.getTime();
-    }
-    function zonedTimeToUtc(year, month, day, hour, minute, second, timeZone) {
-      const guess = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
-      const offset = getTimeZoneOffsetMs(guess, timeZone);
-      return new Date(guess.getTime() - offset);
-    }
+<div class="wrap">
+<h1>Countdown to March 5, 2026 — 12:00 Madrid time</h1>
+<div class="sub">Time zone: <strong>Europe/Madrid</strong></div>
 
-    // Target: 2025-12-29T12:30:00 in Europe/Bucharest
-    const TARGET_TZ = 'Europe/Madrid';
-    const now = new Date();
-    const targetUTC = zonedTimeToUtc(now.getFullYear(), 2, 4, 16, 0, 0, TARGET_TZ);
+<div class="timer">
+<div class="unit"><div id="d" class="num"></div><div class="label">Days</div></div>
+<div class="unit"><div id="h" class="num"></div><div class="label">Hours</div></div>
+<div class="unit"><div id="m" class="num"></div><div class="label">Minutes</div></div>
+<div class="unit"><div id="s" class="num"></div><div class="label">Seconds</div></div>
+</div>
 
-    const $d = document.getElementById('days');
-    const $h = document.getElementById('hours');
-    const $m = document.getElementById('minutes');
-    const $s = document.getElementById('seconds');
-    const $note = document.getElementById('note');
-    const $done = document.getElementById('done');
-    const $replay = document.getElementById('replay');
+<p id="note"></p>
+<p id="done" class="done">It's 12:00 on March 5, 2026 in Madrid 🎉</p>
+</div>
 
-    function format(n) { return String(Math.max(0, n)).padStart(2, '0'); }
+<script>
+function getOffset(date,tz){
+const dtf=new Intl.DateTimeFormat("en-US",{timeZone:tz,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
+const p=Object.fromEntries(dtf.formatToParts(date).map(x=>[x.type,x.value]));
+return Date.UTC(p.year,p.month-1,p.day,p.hour,p.minute,p.second)-date.getTime();
+}
+function zonedUTC(y,mo,d,h,mi,s,tz){
+const g=new Date(Date.UTC(y,mo-1,d,h,mi,s));
+return new Date(g.getTime()-getOffset(g,tz));
+}
 
-    const confettiCanvas = document.getElementById('confetti');
-    const ctx = confettiCanvas.getContext('2d');
-    let pixels = [];
-    let confettiRunning = false;
-    function resizeCanvas() { confettiCanvas.width = window.innerWidth; confettiCanvas.height = window.innerHeight; }
-    window.addEventListener('resize', resizeCanvas, { passive: true }); resizeCanvas();
+const TZ="Europe/Madrid";
+const target=zonedUTC(2026,3,5,12,0,0,TZ);
 
-    function spawnConfetti(count) {
-      const w = confettiCanvas.width, h = confettiCanvas.height;
-      for (let i = 0; i < count; i++) {
-        const angle = Math.random() * Math.PI - Math.PI/2;
-        pixels.push({
-          x: w/2 + (Math.random() - 0.5) * 200,
-          y: h/2,
-          vx: Math.cos(angle) * (2 + Math.random() * 6),
-          vy: - (4 + Math.random() * 10),
-          s: 4 + Math.random() * 6,
-          r: Math.random() * Math.PI,
-          vr: (Math.random() - 0.5) * 0.2,
-          shape: Math.random() < 0.5 ? 'rect' : 'circle',
-          alpha: 1,
-        });
-      }
-    }
+const dEl=d,hEl=h,mEl=m,sEl=s,note=noteEl=document.getElementById("note"),done=document.getElementById("done");
 
-    function drawConfetti() {
-      ctx.clearRect(0,0,confettiCanvas.width, confettiCanvas.height);
-      for (const p of pixels) {
-        ctx.save(); ctx.globalAlpha = p.alpha; ctx.translate(p.x, p.y); ctx.rotate(p.r);
-        if (p.shape === 'rect') { ctx.fillRect(-p.s, -p.s/2, p.s*2, p.s); }
-        else { ctx.beginPath(); ctx.arc(0,0,p.s,0,Math.PI*2); ctx.fill(); }
-        ctx.restore();
-      }
-    }
+function pad(n){return String(n).padStart(2,"0");}
 
-    function stepConfetti() {
-      const g = 0.15; const drag = 0.995; const fade = 0.0045;
-      for (const p of pixels) {
-        p.vx *= drag; p.vy = p.vy * drag + g; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.alpha -= fade;
-      }
-      pixels = pixels.filter(p => p.alpha > 0 && p.y < confettiCanvas.height + 40);
-    }
+function update(){
+let diff=target-Date.now();
+if(diff<=0){
+dEl.textContent=hEl.textContent=mEl.textContent=sEl.textContent="00";
+done.classList.add("celebrate");
+startConfetti();
+clearInterval(int);
+return;
+}
+let s=Math.floor(diff/1000)%60;
+let m=Math.floor(diff/60000)%60;
+let h=Math.floor(diff/3600000)%24;
+let d=Math.floor(diff/86400000);
+dEl.textContent=pad(d);
+hEl.textContent=pad(h);
+mEl.textContent=pad(m);
+sEl.textContent=pad(s);
+note.textContent=`Reaches 12:00 on March 5, 2026 in Madrid (your local: ${target.toLocaleString()})`;
+}
+let int=setInterval(update,1000);
+update();
 
-    function rafLoop() {
-      if (!confettiRunning) return;
-      stepConfetti(); drawConfetti(); requestAnimationFrame(rafLoop);
-    }
+/* confetti */
+const c=document.getElementById("confetti");
+const ctx=c.getContext("2d");
+function resize(){c.width=innerWidth;c.height=innerHeight}
+addEventListener("resize",resize);resize();
+let parts=[];
+function startConfetti(){
+for(let i=0;i<200;i++){
+parts.push({x:c.width/2,y:c.height/2,vx:(Math.random()-.5)*8,vy:(Math.random()-.5)*8,size:4+Math.random()*6,life:100});
+}
+requestAnimationFrame(loop);
+}
+function loop(){
+ctx.clearRect(0,0,c.width,c.height);
+parts.forEach(p=>{
+p.x+=p.vx;
+p.y+=p.vy;
+p.vy+=.15;
+p.life--;
+ctx.fillRect(p.x,p.y,p.size,p.size);
+});
+parts=parts.filter(p=>p.life>0);
+if(parts.length) requestAnimationFrame(loop);
+}
+</script>
 
-    function celebrate(durationMs = 6000) {
-      if (confettiRunning) return;
-      confettiRunning = true;
-      const bursts = [0, 200, 400, 600, 900, 1200, 1500];
-      bursts.forEach((t, i) => setTimeout(() => spawnConfetti(80 - i * 8), t));
-      const sprinkle = setInterval(() => {
-        const w = confettiCanvas.width;
-        const x = Math.random() * w;
-        pixels.push({ x, y: -20, vx: (Math.random()-0.5)*1.5, vy: 2+Math.random()*2, s: 3+Math.random()*4, r: 0, vr: (Math.random()-0.5)*0.2, shape: Math.random()<0.5?'rect':'circle', alpha: 1 });
-      }, 60);
-      requestAnimationFrame(rafLoop);
-      setTimeout(() => { confettiRunning = false; clearInterval(sprinkle); }, durationMs);
-    }
-
-    function update() {
-      const nowUTC = Date.now();
-      let diff = targetUTC.getTime() - nowUTC;
-
-      if (diff <= 0) {
-        document.getElementById('countdown').setAttribute('aria-label', 'Countdown complete');
-        $d.textContent = '00'; $h.textContent = '00'; $m.textContent = '00'; $s.textContent = '00';
-        $note.textContent = '';
-        if ($done.hidden) {
-          $done.hidden = false; $done.classList.add('celebrate'); celebrate(); $replay.hidden = false;
-        }
-        return;
-      }
-
-      const seconds = Math.floor(diff / 1000) % 60;
-      const minutes = Math.floor(diff / (1000 * 60)) % 60;
-      const hours   = Math.floor(diff / (1000 * 60 * 60)) % 24;
-      const days    = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-      $d.textContent = String(days).padStart(2, '0');
-      $h.textContent = format(hours);
-      $m.textContent = format(minutes);
-      $s.textContent = format(seconds);
-
-      [$d,$h,$m,$s].forEach(el => { el.classList.remove('tick'); void el.offsetWidth; el.classList.add('tick'); });
-
-      const targetLocal = new Date(targetUTC);
-      $note.textContent = `Reaches 12:30 on Dec 29 in Bucharest (your local: ${targetLocal.toLocaleString([], { dateStyle: 'medium', timeStyle: 'medium' })}).`;
-    }
-
-    update();
-    let interval = setInterval(update, 1000);
-
-    $replay.addEventListener('click', () => { celebrate(); });
-
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) { clearInterval(interval); }
-      else { update(); interval = setInterval(update, 1000); }
-    });
-  </script>
 </body>
 </html>
